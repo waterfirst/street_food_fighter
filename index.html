@@ -126,7 +126,7 @@ button.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;b
 
   <div id="driverPanel" class="panel">
     <div class="card">
-      <div class="notice">기사 모드는 비밀번호 1111 입력 후 활성화됩니다. 사진 찍기 또는 갤러리 원본 선택으로 영업개시하세요. 아래 목록에서 내가 잘못 등록한 푸드트럭만 삭제할 수 있으며, 다른 기사님의 트럭은 삭제할 수 없습니다.</div>
+      <div class="notice">사진 찍기 또는 갤러리 원본 선택으로 영업개시하세요. 아래 목록에서 내가 잘못 등록한 푸드트럭만 삭제할 수 있으며, 다른 기사님의 트럭은 삭제할 수 없습니다.</div>
       <div class="row">
         <div><label>푸드트럭 이름</label><input id="truckName" placeholder="예: 망향리 타코야끼"></div>
         <div><label>음식 종목</label>
@@ -208,7 +208,6 @@ function getDriverId(){
 const DRIVER_ID=getDriverId();
 
 let map=null,userMarker=null,circle=null,markers=[];
-let driverOK=sessionStorage.getItem('driverOK')==='1';
 let adminOK=sessionStorage.getItem('adminOK')==='1';
 let pin='',lockMode='driver';
 let lastCustomerList=[];
@@ -227,7 +226,7 @@ function distKm(a,b,c,d){const R=6371,to=x=>x*Math.PI/180;const x=to(c-a),y=to(d
 function fmt(ts){return new Date(ts).toLocaleString('ko-KR',{hour:'2-digit',minute:'2-digit',month:'numeric',day:'numeric'})}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 
-$('driverTab').onclick=()=>{if(driverOK)switchTab('driver');else openLock('driver')};
+$('driverTab').onclick=()=>openLock('driver');
 $('customerTab').onclick=()=>switchTab('customer');
 $('adminTab').onclick=()=>{if(adminOK)switchTab('admin');else openLock('admin')};
 
@@ -259,7 +258,6 @@ document.querySelectorAll('.key').forEach(b=>b.onclick=()=>{
     const target=lockMode==='admin'?'0000':'1111';
     if(pin===target){
       if(lockMode==='admin'){adminOK=true;sessionStorage.setItem('adminOK','1')}
-      else{driverOK=true;sessionStorage.setItem('driverOK','1')}
       $('lock').classList.remove('active');
       switchTab(lockMode);
     }else{
