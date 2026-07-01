@@ -36,7 +36,9 @@ body{margin:0;min-height:100vh;background:linear-gradient(160deg,var(--bg-a),var
 .title h1{font-size:clamp(24px,6vw,36px);line-height:1.1;margin:0;color:var(--brand-2)}
 .hint{color:var(--muted);line-height:1.6;margin:6px 0 0}
 
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:16px 0}
+.admin-link{display:block;width:auto;min-height:0;margin:18px auto 0;background:transparent;border:0;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.04em;text-decoration:underline;padding:8px;cursor:pointer}
+.admin-link.active{color:var(--brand-2)}
 .tab{border:1px solid var(--line);border-radius:14px;padding:12px 6px;background:#20232f;color:var(--muted);font-weight:900;font-size:14px}
 .tab.active{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:var(--brand-ink);border-color:var(--brand);box-shadow:0 8px 20px rgba(201,162,75,.3)}
 .panel{display:none}
@@ -115,13 +117,12 @@ button.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;b
   <div class="title">
     <div class="logo">🚚</div>
     <div><h1 class="brand-font">Street Food Fighter</h1>
-    <p class="hint">기사님은 사진 GPS로 영업개시, 고객은 반경 안 영업중 푸드트럭을 지도에서 확인하고 방문 인증 후 좋아요를 남길 수 있습니다.</p></div>
+    <p class="hint">사장님은 사진 GPS로 영업개시, 고객은 반경 안 영업중 푸드트럭을 지도에서 확인하고 방문 인증 후 좋아요를 남길 수 있습니다.</p></div>
   </div>
 
   <div class="tabs">
-    <button id="driverTab" class="tab">기사</button>
     <button id="customerTab" class="tab active">고객</button>
-    <button id="adminTab" class="tab">관리자</button>
+    <button id="driverTab" class="tab">사장님</button>
   </div>
 
   <div id="driverPanel" class="panel">
@@ -186,6 +187,7 @@ button.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;b
     </div>
   </div>
 </section>
+<button id="adminTab" class="admin-link">관리자</button>
 </div>
 
 <input id="verifyInput" type="file" accept="image/*" capture="environment" style="display:none">
@@ -211,7 +213,6 @@ const FOOD_OPTIONS=[
 ];
 
 let map=null,userMarker=null,circle=null,markers=[];
-let adminOK=sessionStorage.getItem('adminOK')==='1';
 let pin='',lockMode='driver';
 let lastCustomerList=[];
 let verifiedIds=new Set();
@@ -232,7 +233,7 @@ function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;',
 
 $('driverTab').onclick=()=>openLock('driver');
 $('customerTab').onclick=()=>switchTab('customer');
-$('adminTab').onclick=()=>{if(adminOK)switchTab('admin');else openLock('admin')};
+$('adminTab').onclick=()=>openLock('admin');
 
 function switchTab(t){
   $('driverTab').classList.toggle('active',t==='driver');
@@ -260,7 +261,6 @@ document.querySelectorAll('.key').forEach(b=>b.onclick=()=>{
   if(pin.length===4){
     const target=lockMode==='admin'?'0000':'1111';
     if(pin===target){
-      if(lockMode==='admin'){adminOK=true;sessionStorage.setItem('adminOK','1')}
       $('lock').classList.remove('active');
       switchTab(lockMode);
     }else{
