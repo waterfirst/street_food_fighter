@@ -87,6 +87,7 @@ button.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;b
 .like-count{font-weight:900}
 .verify-msg{margin-top:8px;font-size:13px;font-weight:700;color:var(--muted)}
 .reset-btn{min-height:38px;padding:0 16px;border-radius:12px;border:1px solid var(--red);background:transparent;color:#f0a3a3;font-weight:800;font-size:13px}
+.delete-btn{min-height:38px;padding:0 16px;border-radius:12px;border:0;background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;font-weight:800;font-size:13px}
 
 @media(min-width:680px){.row{grid-template-columns:1fr 1fr}.hero{padding:24px}.photoBtns{grid-template-columns:1fr 1fr}}
 </style>
@@ -389,25 +390,48 @@ function renderAdmin(){
     <div class="like-row">
       <span class="badge">🤍 좋아요 ${t.likes||0}</span>
       <button class="reset-btn" data-reset="${t.id}">초기화</button>
+      <button class="delete-btn" data-delete="${t.id}">삭제</button>
     </div>
   </div>`).join(''):'<p class="hint">등록된 푸드트럭이 없습니다.</p>';
 }
 
-$('adminList').addEventListener('click',e=>{
-  const btn=e.target.closest('[data-reset]');
-  if(!btn)return;
-  const id=btn.dataset.reset;
-  const all=prune();
-  const truck=all.find(t=>t.id===id);
-  if(!truck)return;
-  truck.likes=0;save(all);
+function forgetTruck(id){
   saveLiked(loadLiked().filter(x=>x!==id));
   verifiedIds.delete(id);
   delete verifyMsgs[id];
-  const cached=lastCustomerList.find(t=>t.id===id);
-  if(cached)cached.likes=0;
-  renderAdmin();
-  renderOpenList();
+  lastCustomerList=lastCustomerList.filter(t=>t.id!==id);
+}
+
+$('adminList').addEventListener('click',e=>{
+  const resetBtn=e.target.closest('[data-reset]');
+  if(resetBtn){
+    const id=resetBtn.dataset.reset;
+    const all=prune();
+    const truck=all.find(t=>t.id===id);
+    if(!truck)return;
+    truck.likes=0;save(all);
+    saveLiked(loadLiked().filter(x=>x!==id));
+    verifiedIds.delete(id);
+    delete verifyMsgs[id];
+    const cached=lastCustomerList.find(t=>t.id===id);
+    if(cached)cached.likes=0;
+    renderAdmin();
+    renderOpenList();
+    return;
+  }
+  const deleteBtn=e.target.closest('[data-delete]');
+  if(deleteBtn){
+    const id=deleteBtn.dataset.delete;
+    const all=prune();
+    const truck=all.find(t=>t.id===id);
+    if(!truck)return;
+    if(!confirm(`"${truck.name}"을(를) 삭제할까요? 되돌릴 수 없습니다.`))return;
+    save(all.filter(t=>t.id!==id));
+    forgetTruck(id);
+    renderAdmin();
+    renderOpenList();
+    renderMy();
+  }
 });
 
 $('resetAllBtn').onclick=()=>{
