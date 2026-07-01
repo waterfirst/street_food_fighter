@@ -87,6 +87,7 @@ button.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;b
 .like-count{font-weight:900}
 .verify-msg{margin-top:8px;font-size:13px;font-weight:700;color:var(--muted)}
 .reset-btn{min-height:38px;padding:0 16px;border-radius:12px;border:1px solid var(--red);background:transparent;color:#f0a3a3;font-weight:800;font-size:13px}
+.edit-btn{min-height:38px;padding:0 16px;border-radius:12px;border:1px solid var(--brand);background:transparent;color:var(--brand-2);font-weight:800;font-size:13px}
 .delete-btn{min-height:38px;padding:0 16px;border-radius:12px;border:0;background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;font-weight:800;font-size:13px}
 
 @media(min-width:680px){.row{grid-template-columns:1fr 1fr}.hero{padding:24px}.photoBtns{grid-template-columns:1fr 1fr}}
@@ -98,7 +99,6 @@ button.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;b
 
 <div id="lock" class="lock">
   <div class="lockbox">
-    <p id="lockTitle">비밀번호를 입력하세요</p>
     <div class="dots" id="dots"></div>
     <div class="err" id="lockErr"></div>
     <div class="pad">
@@ -126,7 +126,7 @@ button.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;b
 
   <div id="driverPanel" class="panel">
     <div class="card">
-      <div class="notice">사진 찍기 또는 갤러리 원본 선택으로 영업개시하세요. 아래 목록에서 내가 잘못 등록한 푸드트럭만 삭제할 수 있으며, 다른 기사님의 트럭은 삭제할 수 없습니다.</div>
+      <div class="notice">사진 찍기 또는 갤러리 원본 선택으로 영업개시하세요. 등록 후 정보 수정이나 삭제가 필요하면 관리자에게 문의하세요.</div>
       <div class="row">
         <div><label>푸드트럭 이름</label><input id="truckName" placeholder="예: 망향리 타코야끼"></div>
         <div><label>음식 종목</label>
@@ -158,7 +158,6 @@ button.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;b
     <div class="card">
       <h2>내 등록 푸드트럭</h2>
       <div id="myList" class="list"></div>
-      <button class="main red" id="clearBtn">오늘 등록 전체 삭제</button>
     </div>
   </div>
 
@@ -178,11 +177,11 @@ button.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;b
 
   <div id="adminPanel" class="panel">
     <div class="card">
-      <div class="notice">관리자 모드는 비밀번호 0000으로 진입합니다. 트럭별 좋아요 수를 확인하고 초기화할 수 있습니다.</div>
+      <div class="notice">관리자만 매장 정보 수정·삭제와 좋아요 초기화를 할 수 있습니다.</div>
       <button class="main red" id="resetAllBtn">전체 좋아요 초기화</button>
     </div>
     <div class="card">
-      <h2>좋아요 현황</h2>
+      <h2>매장 관리</h2>
       <div id="adminList" class="list"></div>
     </div>
   </div>
@@ -206,6 +205,10 @@ function getDriverId(){
   return id;
 }
 const DRIVER_ID=getDriverId();
+const FOOD_OPTIONS=[
+  ['🍜','국수/라멘'],['🍔','버거'],['🌮','타코'],['🍕','피자'],['🍗','치킨'],
+  ['🥟','만두'],['🍢','어묵/분식'],['☕','커피/음료'],['🍦','디저트']
+];
 
 let map=null,userMarker=null,circle=null,markers=[];
 let adminOK=sessionStorage.getItem('adminOK')==='1';
@@ -214,6 +217,7 @@ let lastCustomerList=[];
 let verifiedIds=new Set();
 let verifyMsgs={};
 let currentVerifyId=null;
+let editingId=null;
 
 function nextReset(){const n=new Date(),r=new Date(n);r.setHours(7,0,0,0);if(n>=r)r.setDate(r.getDate()+1);return r.getTime()}
 function load(){try{const a=JSON.parse(localStorage.getItem(KEY)||'[]');return a.map(t=>({...t,likes:Number.isFinite(t.likes)?t.likes:0}))}catch{return[]}}
@@ -243,7 +247,6 @@ function switchTab(t){
 
 function openLock(mode){
   lockMode=mode;pin='';
-  $('lockTitle').textContent=mode==='admin'?'관리자 비밀번호를 입력하세요':'기사 비밀번호를 입력하세요';
   $('dots').textContent='';$('lockErr').textContent='';
   $('lock').classList.add('active');
 }
@@ -273,14 +276,6 @@ $('galleryBtn').onclick=()=>$('galleryInput').click();
 $('cameraInput').onchange=e=>{if(e.target.files.length)startFromPhoto(e.target.files[0],'사진 찍기')};
 $('galleryInput').onchange=e=>{if(e.target.files.length)startFromPhoto(e.target.files[0],'갤러리')};
 $('locBtn').onclick=()=>navigator.geolocation.getCurrentPosition(p=>registerTruck(p.coords.latitude,p.coords.longitude,'현재 위치'),e=>alert(e.message),{enableHighAccuracy:true,timeout:12000});
-$('clearBtn').onclick=()=>{
-  if(!confirm('내가 등록한 푸드트럭을 모두 삭제할까요? 다른 기사님의 트럭은 삭제되지 않습니다.'))return;
-  const all=prune();
-  all.filter(t=>t.driverId===DRIVER_ID).forEach(t=>forgetTruck(t.id));
-  save(all.filter(t=>t.driverId!==DRIVER_ID));
-  renderMy();
-  alert('내가 등록한 푸드트럭을 삭제했습니다');
-};
 $('nearBtn').onclick=()=>navigator.geolocation.getCurrentPosition(p=>renderCustomer(p.coords.latitude,p.coords.longitude),e=>alert(e.message),{enableHighAccuracy:true,timeout:12000});
 
 async function startFromPhoto(file,source){
@@ -301,20 +296,8 @@ function registerTruck(lat,lon,source){
 
 function renderMy(){
   const a=prune().filter(t=>t.driverId===DRIVER_ID);
-  $('myList').innerHTML=a.length?a.map(t=>`<div class="truck-card"><b>${t.emoji} ${esc(t.name)} <span class="badge">🤍 ${t.likes||0}</span></b><div>${esc(t.food)} · 영업개시 ${fmt(t.openedAt)}</div><div class="small">${esc(t.memo)}<br>${t.lat.toFixed(5)}, ${t.lon.toFixed(5)} · ${esc(t.source)}</div><div class="like-row"><button class="delete-btn" data-mydelete="${t.id}">삭제</button></div></div>`).join(''):'<p class="hint">등록된 푸드트럭이 없습니다.</p>';
+  $('myList').innerHTML=a.length?a.map(t=>`<div class="truck-card"><b>${t.emoji} ${esc(t.name)} <span class="badge">🤍 ${t.likes||0}</span></b><div>${esc(t.food)} · 영업개시 ${fmt(t.openedAt)}</div><div class="small">${esc(t.memo)}<br>${t.lat.toFixed(5)}, ${t.lon.toFixed(5)} · ${esc(t.source)}</div></div>`).join(''):'<p class="hint">등록된 푸드트럭이 없습니다.</p>';
 }
-$('myList').addEventListener('click',e=>{
-  const btn=e.target.closest('[data-mydelete]');
-  if(!btn)return;
-  const id=btn.dataset.mydelete;
-  const all=prune();
-  const truck=all.find(t=>t.id===id&&t.driverId===DRIVER_ID);
-  if(!truck)return;
-  if(!confirm(`"${truck.name}"을(를) 삭제할까요? 되돌릴 수 없습니다.`))return;
-  save(all.filter(t=>t.id!==id));
-  forgetTruck(id);
-  renderMy();
-});
 renderMy();
 
 function initMap(){
@@ -407,17 +390,36 @@ function doLike(id){
   renderOpenList();
 }
 
-function renderAdmin(){
-  const a=prune();
-  $('adminList').innerHTML=a.length?a.map(t=>`<div class="truck-card">
+function adminViewHTML(t){
+  return `<div class="truck-card">
     <b>${t.emoji} ${esc(t.name)}</b>
     <div class="small">${esc(t.food)} · 영업개시 ${fmt(t.openedAt)}</div>
+    <div class="small">${esc(t.memo)}</div>
     <div class="like-row">
       <span class="badge">🤍 좋아요 ${t.likes||0}</span>
+      <button class="edit-btn" data-edit="${t.id}">수정</button>
       <button class="reset-btn" data-reset="${t.id}">초기화</button>
       <button class="delete-btn" data-delete="${t.id}">삭제</button>
     </div>
-  </div>`).join(''):'<p class="hint">등록된 푸드트럭이 없습니다.</p>';
+  </div>`;
+}
+
+function adminEditHTML(t){
+  const foodOptions=FOOD_OPTIONS.map(([emoji,label])=>`<option value="${emoji}|${label}"${emoji===t.emoji&&label===t.food?' selected':''}>${emoji} ${label}</option>`).join('');
+  return `<div class="truck-card">
+    <label>푸드트럭 이름</label><input id="editName-${t.id}" value="${esc(t.name)}">
+    <label>음식 종목</label><select id="editFood-${t.id}">${foodOptions}</select>
+    <label>메뉴/공지</label><textarea id="editMemo-${t.id}" rows="3">${esc(t.memo)}</textarea>
+    <div class="like-row">
+      <button class="main green" data-save="${t.id}">저장</button>
+      <button class="main dark" data-cancel="${t.id}">취소</button>
+    </div>
+  </div>`;
+}
+
+function renderAdmin(){
+  const a=prune();
+  $('adminList').innerHTML=a.length?a.map(t=>t.id===editingId?adminEditHTML(t):adminViewHTML(t)).join(''):'<p class="hint">등록된 푸드트럭이 없습니다.</p>';
 }
 
 function forgetTruck(id){
@@ -428,6 +430,37 @@ function forgetTruck(id){
 }
 
 $('adminList').addEventListener('click',e=>{
+  const editBtn=e.target.closest('[data-edit]');
+  if(editBtn){
+    editingId=editBtn.dataset.edit;
+    renderAdmin();
+    return;
+  }
+  const cancelBtn=e.target.closest('[data-cancel]');
+  if(cancelBtn){
+    editingId=null;
+    renderAdmin();
+    return;
+  }
+  const saveBtn=e.target.closest('[data-save]');
+  if(saveBtn){
+    const id=saveBtn.dataset.save;
+    const all=prune();
+    const truck=all.find(t=>t.id===id);
+    if(!truck)return;
+    const [emoji,food]=$(`editFood-${id}`).value.split('|');
+    truck.name=$(`editName-${id}`).value||'이름없는 푸드트럭';
+    truck.emoji=emoji;truck.food=food;
+    truck.memo=$(`editMemo-${id}`).value||'';
+    save(all);
+    const cached=lastCustomerList.find(t=>t.id===id);
+    if(cached){cached.name=truck.name;cached.emoji=truck.emoji;cached.food=truck.food;cached.memo=truck.memo}
+    editingId=null;
+    renderAdmin();
+    renderOpenList();
+    renderMy();
+    return;
+  }
   const resetBtn=e.target.closest('[data-reset]');
   if(resetBtn){
     const id=resetBtn.dataset.reset;
