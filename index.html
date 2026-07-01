@@ -126,7 +126,7 @@ button.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;b
 
   <div id="driverPanel" class="panel">
     <div class="card">
-      <div class="notice">기사 모드는 비밀번호 1111 입력 후 활성화됩니다. 사진 찍기 또는 갤러리 원본 선택으로 영업개시하세요.</div>
+      <div class="notice">기사 모드는 비밀번호 1111 입력 후 활성화됩니다. 사진 찍기 또는 갤러리 원본 선택으로 영업개시하세요. 아래 목록에서 내가 잘못 등록한 푸드트럭만 삭제할 수 있으며, 다른 기사님의 트럭은 삭제할 수 없습니다.</div>
       <div class="row">
         <div><label>푸드트럭 이름</label><input id="truckName" placeholder="예: 망향리 타코야끼"></div>
         <div><label>음식 종목</label>
@@ -196,8 +196,16 @@ button.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec;b
 <script>
 const KEY='sff_trucks_v1';
 const LIKE_KEY='sff_liked_v1';
+const DRIVER_ID_KEY='sff_driver_id';
 const VERIFY_RADIUS_KM=0.15;
 const $=id=>document.getElementById(id);
+
+function getDriverId(){
+  let id=localStorage.getItem(DRIVER_ID_KEY);
+  if(!id){id=crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random();localStorage.setItem(DRIVER_ID_KEY,id)}
+  return id;
+}
+const DRIVER_ID=getDriverId();
 
 let map=null,userMarker=null,circle=null,markers=[];
 let driverOK=sessionStorage.getItem('driverOK')==='1';
@@ -267,7 +275,14 @@ $('galleryBtn').onclick=()=>$('galleryInput').click();
 $('cameraInput').onchange=e=>{if(e.target.files.length)startFromPhoto(e.target.files[0],'사진 찍기')};
 $('galleryInput').onchange=e=>{if(e.target.files.length)startFromPhoto(e.target.files[0],'갤러리')};
 $('locBtn').onclick=()=>navigator.geolocation.getCurrentPosition(p=>registerTruck(p.coords.latitude,p.coords.longitude,'현재 위치'),e=>alert(e.message),{enableHighAccuracy:true,timeout:12000});
-$('clearBtn').onclick=()=>{save([]);renderMy();alert('삭제했습니다')};
+$('clearBtn').onclick=()=>{
+  if(!confirm('내가 등록한 푸드트럭을 모두 삭제할까요? 다른 기사님의 트럭은 삭제되지 않습니다.'))return;
+  const all=prune();
+  all.filter(t=>t.driverId===DRIVER_ID).forEach(t=>forgetTruck(t.id));
+  save(all.filter(t=>t.driverId!==DRIVER_ID));
+  renderMy();
+  alert('내가 등록한 푸드트럭을 삭제했습니다');
+};
 $('nearBtn').onclick=()=>navigator.geolocation.getCurrentPosition(p=>renderCustomer(p.coords.latitude,p.coords.longitude),e=>alert(e.message),{enableHighAccuracy:true,timeout:12000});
 
 async function startFromPhoto(file,source){
@@ -280,16 +295,28 @@ async function startFromPhoto(file,source){
 
 function registerTruck(lat,lon,source){
   const [emoji,food]=$('foodType').value.split('|');
-  const truck={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),name:$('truckName').value||'이름없는 푸드트럭',emoji,food,memo:$('memo').value||'',lat,lon,source,openedAt:Date.now(),openUntil:nextReset(),likes:0};
+  const truck={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),driverId:DRIVER_ID,name:$('truckName').value||'이름없는 푸드트럭',emoji,food,memo:$('memo').value||'',lat,lon,source,openedAt:Date.now(),openUntil:nextReset(),likes:0};
   const a=prune();a.push(truck);save(a);
   $('driverStatus').innerHTML=`✅ 영업개시 등록 완료<br>${emoji} ${truck.name}<br>좌표 ${lat.toFixed(6)}, ${lon.toFixed(6)}<br>다음날 아침 7시 자동 리셋`;
   renderMy();
 }
 
 function renderMy(){
-  const a=prune();
-  $('myList').innerHTML=a.length?a.map(t=>`<div class="truck-card"><b>${t.emoji} ${esc(t.name)} <span class="badge">🤍 ${t.likes||0}</span></b><div>${esc(t.food)} · 영업개시 ${fmt(t.openedAt)}</div><div class="small">${esc(t.memo)}<br>${t.lat.toFixed(5)}, ${t.lon.toFixed(5)} · ${esc(t.source)}</div></div>`).join(''):'<p class="hint">등록된 푸드트럭이 없습니다.</p>';
+  const a=prune().filter(t=>t.driverId===DRIVER_ID);
+  $('myList').innerHTML=a.length?a.map(t=>`<div class="truck-card"><b>${t.emoji} ${esc(t.name)} <span class="badge">🤍 ${t.likes||0}</span></b><div>${esc(t.food)} · 영업개시 ${fmt(t.openedAt)}</div><div class="small">${esc(t.memo)}<br>${t.lat.toFixed(5)}, ${t.lon.toFixed(5)} · ${esc(t.source)}</div><div class="like-row"><button class="delete-btn" data-mydelete="${t.id}">삭제</button></div></div>`).join(''):'<p class="hint">등록된 푸드트럭이 없습니다.</p>';
 }
+$('myList').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-mydelete]');
+  if(!btn)return;
+  const id=btn.dataset.mydelete;
+  const all=prune();
+  const truck=all.find(t=>t.id===id&&t.driverId===DRIVER_ID);
+  if(!truck)return;
+  if(!confirm(`"${truck.name}"을(를) 삭제할까요? 되돌릴 수 없습니다.`))return;
+  save(all.filter(t=>t.id!==id));
+  forgetTruck(id);
+  renderMy();
+});
 renderMy();
 
 function initMap(){
