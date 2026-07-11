@@ -1,0 +1,10 @@
+{
+  "name": "street-food-fighter",
+  "type": "module",
+  "scripts": {
+    "test:server": "node test-server.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.40.0"
+  }
+}
