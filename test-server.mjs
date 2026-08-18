@@ -66,7 +66,7 @@ async function run() {
     await page.locator('#menuDialog[open]').waitFor();
     await page.locator('[data-delta="1"]').first().click();
     await page.locator('#cartDock:not([hidden])').waitFor();
-    await page.locator('#cartDock').click();
+    await page.locator('#menuCartButton:not([hidden])').click();
     await page.locator('#checkoutDialog[open]').waitFor();
     await page.locator('input[value="NAVERPAY"]').check();
     await page.locator('#termsCheck').check();

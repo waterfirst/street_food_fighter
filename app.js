@@ -191,10 +191,13 @@ function renderCartDock() {
   const count = cartCount();
   const { truck, total } = cartDetails();
   $('cartDock').hidden = count === 0;
+  $('menuCartButton').hidden = count === 0 || state.currentTruckId !== state.cart.truckId;
   if (!truck) return;
   $('cartCount').textContent = count;
   $('cartTruckName').textContent = truck.name;
   $('cartTotal').textContent = won(total);
+  $('menuCartCount').textContent = count;
+  $('menuCartTotal').textContent = won(total);
 }
 
 function orderEta(details) {
@@ -418,6 +421,7 @@ function bindEvents() {
     if (button) updateCart(button.dataset.menuId, Number(button.dataset.delta));
   });
   $('cartDock').addEventListener('click', openCheckout);
+  $('menuCartButton').addEventListener('click', openCheckout);
   $('termsCheck').addEventListener('change', event => { $('paymentButton').disabled = !event.target.checked; });
   $('paymentButton').addEventListener('click', handlePayment);
   document.querySelectorAll('[data-close-dialog]').forEach(button => button.addEventListener('click', () => closeDialog(button.closest('dialog'))));
