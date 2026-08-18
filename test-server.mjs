@@ -68,7 +68,8 @@ async function run() {
     await page.locator('#cartDock:not([hidden])').waitFor();
     await page.locator('#menuCartButton:not([hidden])').click();
     await page.locator('#checkoutDialog[open]').waitFor();
-    await page.locator('input[value="NAVERPAY"]').check();
+    await page.locator('label:has(input[value="NAVERPAY"])').click();
+    assert(await page.locator('input[value="NAVERPAY"]').isChecked(), '네이버페이 결제수단이 선택되어야 합니다.');
     await page.locator('#termsCheck').check();
     await page.locator('#paymentButton').click();
     await page.locator('#ordersView.active').waitFor();
