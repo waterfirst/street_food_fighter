@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1b1b18">
+  <title>결제 승인 중 — Street Food Fighter</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./payment.css">
+</head>
+<body class="payment-page">
+  <main class="payment-result" id="paymentResult" aria-live="polite">
+    <div class="result-mark loading" id="resultMark">···</div>
+    <p class="eyebrow" id="resultEyebrow">PAYMENT CONFIRMATION</p>
+    <h1 id="resultTitle">결제를 확인하고 있습니다</h1>
+    <p id="resultMessage">잠시만 기다려주세요. 창을 닫지 마세요.</p>
+    <div class="result-details" id="resultDetails" hidden></div>
+    <a class="result-button" id="resultButton" href="./index.html#orders" hidden>주문 현황 보기</a>
+  </main>
+  <script src="./config.js"></script>
+  <script type="module" src="./payment-success.js"></script>
+</body>
+</html>
