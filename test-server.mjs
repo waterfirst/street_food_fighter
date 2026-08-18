@@ -46,7 +46,7 @@ async function run() {
 
   const tempDir = resolve('artifacts/tmp');
   await mkdir(tempDir, { recursive: true });
-  process.env.TMPDIR = tempDir;
+  process.env.TMPDIR = process.env.CI ? '/tmp' : tempDir;
   const browserPath = [process.env.PLAYWRIGHT_CHROMIUM_PATH, '/opt/pw-browsers/chromium', chromium.executablePath()].find(path => path && existsSync(path));
   if (!browserPath) {
     console.log('✓ 정적 제공, 주문 API, 서버 금액 재계산 테스트 통과');
