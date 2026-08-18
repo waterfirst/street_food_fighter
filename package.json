@@ -1,10 +1,18 @@
 {
   "name": "street-food-fighter",
+  "version": "2.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "test": "node test-server.mjs",
     "test:server": "node test-server.mjs"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "devDependencies": {
-    "playwright": "^1.40.0"
+    "playwright": "^1.58.2"
   }
 }

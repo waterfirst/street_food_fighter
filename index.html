@@ -1,65 +1,186 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0d0e14">
-<title>최낙초 - 포트폴리오</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
-<style>
-:root{--bg-a:#0b0c12;--bg-b:#1a1c28;--card:#171923;--card2:#1f2230;--text:#f7f1e5;--muted:#9aa0af;--brand:#c9a24b;--brand2:#f0d98a;--ink:#241a05;--line:#2b2e3d;--green:#39a96b;--red:#c94a4a}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,#2c3043 0,#11131d 46%,#08090e 100%);color:var(--text);font-family:'Noto Sans KR',system-ui,sans-serif}.brand{font-family:'Playfair Display',serif;letter-spacing:.3px}.splash{position:fixed;inset:0;background:radial-gradient(circle at 50% 30%,#25293c,#08090e);z-index:50;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--brand2);animation:hideSplash .7s ease 1.25s forwards}.splash .truck{font-size:82px;filter:drop-shadow(0 8px 18px rgba(201,162,75,.35));animation:bounce .8s infinite alternate}.splash h1{font-size:32px;margin:12px 0 4px}.splash p{margin:0;color:var(--muted);font-weight:800}@keyframes bounce{to{transform:translateY(-12px)}}@keyframes hideSplash{to{opacity:0;visibility:hidden}}
-.wrap{max-width:920px;margin:0 auto;padding:14px 14px calc(28px + env(safe-area-inset-bottom))}.hero{padding:18px;border:1px solid var(--line);border-top:3px solid var(--brand);border-radius:26px;background:linear-gradient(180deg,rgba(31,34,48,.98),rgba(18,20,29,.98));box-shadow:0 22px 55px rgba(0,0,0,.48);margin-top:10px}.top{display:flex;align-items:center;gap:12px}.logo{font-size:44px;filter:drop-shadow(0 5px 12px rgba(201,162,75,.35))}.top h1{font-size:clamp(26px,6vw,38px);line-height:1.05;margin:0;color:var(--brand2)}.hook{margin:8px 0 0;color:#e8dcc2;font-size:17px;font-weight:900;line-height:1.35}.subhook{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.45}.panel{display:none}.panel.active{display:block}.card{background:rgba(23,25,35,.96);border:1px solid var(--line);border-radius:22px;padding:15px;margin:14px 0;box-shadow:0 10px 24px rgba(0,0,0,.32)}.card h2{margin:0 0 11px;color:var(--brand2);font-size:18px}.mapShell{position:relative;margin-top:14px;border-radius:24px;padding:7px;background:linear-gradient(135deg,rgba(201,162,75,.8),rgba(43,46,61,.7));box-shadow:0 18px 42px rgba(0,0,0,.45)}#map{height:58vh;min-height:360px;border-radius:20px;overflow:hidden;background:#d6d3c2}.mapCaption{position:absolute;left:18px;right:18px;bottom:18px;padding:11px 13px;border-radius:16px;background:rgba(10,12,18,.78);backdrop-filter:blur(8px);font-size:13px;font-weight:800;color:#f7f1e5;display:flex;justify-content:space-between;gap:8px}.range{display:flex;gap:11px;align-items:center}.range label{font-size:14px;font-weight:900;color:#f4e8cc}.range input{flex:1}.range b{color:var(--brand2)}button{font-family:inherit}.main{width:100%;min-height:52px;border:0;border-radius:17px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:var(--ink);font-size:17px;font-weight:1000;box-shadow:0 11px 25px rgba(201,162,75,.24);margin-top:10px}.green{background:linear-gradient(135deg,#2f8f5b,var(--green));color:#eafff0}.dark{background:#252838;color:var(--text);border:1px solid var(--line);box-shadow:none}.red{background:linear-gradient(135deg,#8f2f36,var(--red));color:#ffecec}.status{padding:11px 12px;border-left:3px solid var(--brand);background:#181b26;border-radius:15px;color:#e9dfcd;font-size:13px;line-height:1.45;margin-top:10px}.bottomNav{display:flex;justify-content:center;align-items:center;gap:8px;margin:18px auto 0}.mini{border:1px solid var(--line);background:rgba(31,34,48,.9);color:var(--muted);border-radius:999px;padding:9px 13px;font-size:12px;font-weight:900}.mini.primary{color:var(--brand2);border-color:rgba(201,162,75,.55)}.list{display:grid;gap:10px}.truck-card{border:1px solid var(--line);border-radius:19px;padding:14px;background:linear-gradient(180deg,#1a1d29,#141620);box-shadow:0 6px 18px rgba(0,0,0,.28)}.truck-card b{font-size:18px;color:var(--brand2)}.small{font-size:13px;color:var(--muted);line-height:1.45}.badge{display:inline-block;background:rgba(201,162,75,.14);color:var(--brand2);border:1px solid rgba(201,162,75,.65);border-radius:999px;padding:3px 9px;font-size:12px;font-weight:900}.emoji-marker{font-size:32px;text-shadow:0 3px 10px rgba(0,0,0,.55)}label{display:block;margin:10px 0 6px;color:var(--muted);font-size:12px;font-weight:900;letter-spacing:.05em}input,select,textarea{width:100%;padding:13px;border:1px solid var(--line);border-radius:15px;background:#12141c;color:var(--text);font-size:16px}textarea{resize:vertical}.row{display:grid;grid-template-columns:1fr;gap:10px}.photoBtns{display:grid;grid-template-columns:1fr;gap:10px}.preview{width:100%;max-height:260px;object-fit:contain;background:#000;border:1px solid var(--line);border-radius:17px;margin-top:10px}.notice{padding:12px;border-radius:17px;background:#1c1f2d;border-left:3px solid var(--brand);color:#ead893;font-size:13px;font-weight:800;line-height:1.5}.lock{position:fixed;inset:0;background:#05060a;z-index:100;display:none;align-items:center;justify-content:center}.lock.active{display:flex}.lockbox{width:min(360px,92vw);text-align:center}.dots{height:38px;font-size:30px;letter-spacing:10px;color:var(--brand2);margin:12px 0 22px}.err{height:24px;color:#f2879a;font-weight:900}.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.key{height:62px;border-radius:50px;border:1px solid #3a3220;background:#12131a;color:var(--brand2);font-size:26px;font-weight:900}.verify-btn,.like-btn,.edit-btn,.reset-btn,.delete-btn{min-height:42px;border-radius:13px;padding:0 13px;font-weight:900}.verify-btn{border:1px solid var(--brand);background:transparent;color:var(--brand2)}.like-btn{border:0;background:#292c3a;color:#747b8c}.like-btn:not(:disabled){background:linear-gradient(135deg,#d9536a,#f2879a);color:white}.edit-btn,.reset-btn{background:transparent;border:1px solid var(--brand);color:var(--brand2)}.delete-btn{border:0;background:var(--red);color:white}.like-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.verify-msg{font-size:13px;color:var(--muted);margin-top:8px}@media(min-width:680px){.row,.photoBtns{grid-template-columns:1fr 1fr}.hero{padding:24px}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f4ed">
+  <meta name="description" content="실시간 혼잡도와 픽업 시간을 보고 주문하는 푸드트럭 플랫폼">
+  <title>Street Food Fighter — 기다림까지 맛있게</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2228%22 fill=%22%231b1b18%22/><text y=%22.82em%22 x=%2250%25%22 text-anchor=%22middle%22 font-size=%2270%22>🔥</text></svg>">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="https://js.tosspayments.com/v2/standard"></script>
 </head>
 <body>
-<div class="splash"><div><div class="truck">👨‍💻</div><h1 class="brand">최낙초</h1><p>Software Engineer & Developer</p></div></div>
-<div class="wrap"><section class="hero"><div class="top"><div class="logo">👨‍💻</div><div><h1 class="brand">최낙초</h1><p class="hook">Full-Stack Developer</p><p class="subhook">웹 애플리케이션 개발 및 시스템 설계 전문가</p></div></div>
-<div id="portfolioPanel" class="panel active">
-<div class="card"><h2>소개</h2><p class="small">안녕하세요! 저는 웹 애플리케이션 개발을 전문으로 하는 개발자입니다. 사용자 중심의 설계와 높은 품질의 코드를 추구합니다.</p></div>
+  <a class="skip-link" href="#mainContent">본문으로 바로가기</a>
+  <div class="app-shell">
+    <header class="site-header">
+      <a class="wordmark" href="#" aria-label="Street Food Fighter 홈">
+        <span class="wordmark-mark">SFF</span>
+        <span class="wordmark-copy"><b>STREET FOOD</b><small>FIGHTER</small></span>
+      </a>
+      <nav class="desktop-nav" aria-label="주요 메뉴">
+        <button class="nav-link active" data-view="discover">푸드트럭 찾기</button>
+        <button class="nav-link" data-view="orders">내 주문</button>
+      </nav>
+      <div class="header-actions">
+        <button class="location-button" id="locationButton" type="button">
+          <span class="icon-pin" aria-hidden="true"></span>
+          <span><small>현재 위치</small><b id="locationLabel">여의도 한강공원</b></span>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <button class="icon-button" id="notificationButton" type="button" aria-label="알림">
+          <span aria-hidden="true">◒</span><i></i>
+        </button>
+      </div>
+    </header>
 
-<div class="card"><h2>기술 스택</h2><div class="list" id="techStack" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;"></div></div>
+    <main id="mainContent">
+      <section id="discoverView" class="view active" aria-labelledby="discoverTitle">
+        <div class="hero-copy">
+          <div>
+            <p class="eyebrow"><span class="live-dot"></span> SEOUL STREET LIVE</p>
+            <h1 id="discoverTitle">기다림은 짧게,<br><em>맛있는 순간은 길게.</em></h1>
+            <p class="hero-description">주문이 몰리는 곳과 실제 준비시간을 한눈에 비교하세요.<br class="desktop-only"> 줄 서지 않고 결제하고, 가장 맛있는 타이밍에 찾아가세요.</p>
+          </div>
+          <div class="hero-stats" aria-label="현재 현황">
+            <div><span>영업중</span><strong id="openTruckCount">4</strong><small>TRUCKS</small></div>
+            <div><span>평균 준비</span><strong id="averageEta">14</strong><small>MIN</small></div>
+            <div><span>지금 주문</span><strong id="liveOrderCount">37</strong><small>ORDERS</small></div>
+          </div>
+        </div>
 
-<div class="card"><h2>경험</h2><div class="list" id="experienceList"></div></div>
+        <section class="toolbar" aria-label="푸드트럭 검색 및 필터">
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <span class="sr-only">트럭 또는 메뉴 검색</span>
+            <input id="searchInput" type="search" placeholder="트럭 또는 메뉴를 검색하세요" autocomplete="off">
+          </label>
+          <div class="category-list" id="categoryList" role="group" aria-label="음식 카테고리"></div>
+          <label class="sort-select">
+            <span class="sr-only">정렬 방식</span>
+            <select id="sortSelect">
+              <option value="recommended">추천순</option>
+              <option value="eta">준비 빠른순</option>
+              <option value="crowd">혼잡한순</option>
+              <option value="distance">거리순</option>
+            </select>
+          </label>
+        </section>
 
-<div class="card"><h2>주요 프로젝트</h2><div class="list" id="projectList"></div></div>
+        <div class="dashboard-grid">
+          <section class="truck-section" aria-labelledby="nearbyHeading">
+            <div class="section-heading">
+              <div><p class="eyebrow">NEARBY PICKS</p><h2 id="nearbyHeading">지금 가까운 맛</h2></div>
+              <p><b id="resultCount">4</b>개의 트럭</p>
+            </div>
+            <div class="truck-list" id="truckList"></div>
+            <div class="empty-state" id="emptyState" hidden>
+              <span>⌕</span><h3>검색 결과가 없습니다</h3><p>다른 메뉴나 카테고리를 찾아보세요.</p>
+            </div>
+          </section>
 
-<div class="card"><h2>연락처</h2><div class="list"><div class="truck-card"><b>📧 이메일</b><div class="small"><a href="mailto:nakcho.choi@gmail.com" style="color:#c9a24b;text-decoration:none;">nakcho.choi@gmail.com</a></div></div><div class="truck-card"><b>🔗 소셜</b><div class="small">GitHub · LinkedIn · Portfolio</div></div></div></div>
-</div>
-</section></div><script>
-const $=id=>document.getElementById(id);
+          <aside class="insight-column" aria-labelledby="radarHeading">
+            <section class="radar-card">
+              <div class="section-heading compact">
+                <div><p class="eyebrow">CROWD RADAR</p><h2 id="radarHeading">실시간 혼잡 레이더</h2></div>
+                <span class="sync-label"><i></i> 10초 전</span>
+              </div>
+              <div class="radar-map" id="radarMap" aria-label="푸드트럭별 혼잡도 위치 지도"></div>
+              <div class="crowd-ranking" id="crowdRanking"></div>
+              <p class="method-note">대기 주문, 최근 15분 유입, 조리 처리량을 합산한 혼잡도입니다.</p>
+            </section>
 
-const techStack=['JavaScript','React','Node.js','Python','SQL','HTML/CSS','REST API','Docker'];
-const experience=[
-  {title:'Senior Developer',company:'Tech Company',period:'2022-현재',description:'웹 애플리케이션 개발 및 팀 리더십'},
-  {title:'Developer',company:'StartUp',period:'2020-2022',description:'프론트엔드 및 백엔드 개발'}
-];
-const projects=[
-  {name:'🚚 Street Food Fighter',desc:'실시간 푸드트럭 위치 추적 앱',tech:'JavaScript, Leaflet, LocalStorage'},
-  {name:'📱 포트폴리오 사이트',desc:'반응형 포트폴리오 웹사이트',tech:'HTML, CSS, JavaScript'}
-];
+            <section class="promise-card">
+              <div class="promise-icon" aria-hidden="true">⌁</div>
+              <div><p class="eyebrow">PICKUP PROMISE</p><h3>도착 전에 완성되지 않도록</h3><p>실시간 주문 흐름을 반영해 픽업 시간을 계속 보정합니다.</p></div>
+            </section>
+          </aside>
+        </div>
+      </section>
 
-function renderTechStack(){
-  const html=techStack.map(tech=>`<div class="truck-card" style="padding:10px;text-align:center;"><div class="small">${tech}</div></div>`).join('');
-  $('techStack').innerHTML=html;
-}
+      <section id="ordersView" class="view" aria-labelledby="ordersHeading">
+        <div class="orders-hero">
+          <p class="eyebrow">MY PICKUP</p>
+          <h1 id="ordersHeading">내 주문</h1>
+          <p>조리 상태와 남은 시간을 실시간으로 확인하세요.</p>
+        </div>
+        <div id="orderList" class="order-list"></div>
+        <div id="noOrders" class="no-orders">
+          <span aria-hidden="true">◎</span>
+          <h2>진행 중인 주문이 없습니다</h2>
+          <p>지금 가까운 푸드트럭의 메뉴를 둘러보세요.</p>
+          <button class="primary-button" type="button" data-view="discover">푸드트럭 찾기</button>
+        </div>
+      </section>
+    </main>
 
-function renderExperience(){
-  const html=experience.map(exp=>`<div class="truck-card"><b>${exp.title}</b><div class="small">${exp.company} · ${exp.period}<br>${exp.description}</div></div>`).join('');
-  $('experienceList').innerHTML=html;
-}
+    <nav class="mobile-nav" aria-label="모바일 메뉴">
+      <button class="active" data-view="discover"><span aria-hidden="true">⌂</span>홈</button>
+      <button data-focus-search><span aria-hidden="true">⌕</span>검색</button>
+      <button data-view="orders"><span aria-hidden="true">◷</span>내 주문</button>
+    </nav>
+  </div>
 
-function renderProjects(){
-  const html=projects.map(proj=>`<div class="truck-card"><b>${proj.name}</b><div class="small">${proj.desc}<br>📚 ${proj.tech}</div></div>`).join('');
-  $('projectList').innerHTML=html;
-}
+  <button id="cartDock" class="cart-dock" type="button" hidden>
+    <span class="cart-count" id="cartCount">0</span>
+    <span><small>장바구니</small><b id="cartTruckName">트럭 메뉴</b></span>
+    <strong id="cartTotal">0원</strong>
+    <span aria-hidden="true">→</span>
+  </button>
 
-// 페이지 로드
-window.addEventListener('load',()=>{
-  renderTechStack();
-  renderExperience();
-  renderProjects();
-});
-</script></body></html>
+  <dialog id="menuDialog" class="sheet-dialog">
+    <div class="dialog-shell menu-shell">
+      <button class="dialog-close" type="button" data-close-dialog aria-label="닫기">×</button>
+      <div class="menu-visual" id="menuVisual"></div>
+      <div class="menu-content">
+        <div class="menu-truck-head">
+          <div><div id="menuTags" class="tag-row"></div><h2 id="menuTruckName"></h2><p id="menuTruckMeta"></p></div>
+          <div class="eta-seal"><span>READY IN</span><strong id="menuEta"></strong><small>MIN</small></div>
+        </div>
+        <div class="queue-summary" id="queueSummary"></div>
+        <div class="menu-list" id="menuList"></div>
+      </div>
+      <button id="menuCartButton" class="menu-cart-button" type="button" hidden>
+        <span class="cart-count" id="menuCartCount">0</span>
+        <span><small>선택한 메뉴</small><b>주문 확인하기</b></span>
+        <strong id="menuCartTotal">0원</strong>
+        <span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </dialog>
+
+  <dialog id="checkoutDialog" class="sheet-dialog checkout-dialog">
+    <div class="dialog-shell checkout-shell">
+      <button class="dialog-close" type="button" data-close-dialog aria-label="닫기">×</button>
+      <div class="checkout-main">
+        <p class="eyebrow">SECURE CHECKOUT</p>
+        <h2>주문을 확인해주세요</h2>
+        <div class="checkout-order" id="checkoutItems"></div>
+        <div class="pickup-panel">
+          <div><span class="pickup-clock" aria-hidden="true">◷</span><span><small>예상 픽업</small><strong id="checkoutPickupTime"></strong></span></div>
+          <span id="checkoutEtaBadge" class="eta-badge"></span>
+        </div>
+        <fieldset class="payment-fieldset">
+          <legend>결제수단</legend>
+          <div class="payment-options">
+            <label><input type="radio" name="paymentMethod" value="CARD" checked><span><i class="card-symbol"></i><b>신용카드</b><small>모든 카드</small></span></label>
+            <label><input type="radio" name="paymentMethod" value="NAVERPAY"><span><i class="naver-symbol">N</i><b>네이버페이</b><small>포인트 사용</small></span></label>
+            <label><input type="radio" name="paymentMethod" value="TOSSPAY"><span><i class="toss-symbol">toss</i><b>토스페이</b><small>빠른 결제</small></span></label>
+          </div>
+        </fieldset>
+      </div>
+      <aside class="checkout-summary">
+        <div><p class="eyebrow">ORDER SUMMARY</p><h3 id="checkoutTruckName"></h3></div>
+        <dl><div><dt>주문금액</dt><dd id="checkoutSubtotal"></dd></div><div><dt>서비스 이용료</dt><dd>0원</dd></div><div class="total-row"><dt>총 결제금액</dt><dd id="checkoutTotal"></dd></div></dl>
+        <label class="terms-check"><input id="termsCheck" type="checkbox"><span>주문 내용과 결제 조건을 확인했으며 결제에 동의합니다.</span></label>
+        <button id="paymentButton" class="payment-button" type="button" disabled><span id="paymentButtonText">결제하기</span><strong id="paymentButtonAmount"></strong></button>
+        <p class="secure-note"><span aria-hidden="true">◆</span> 결제 정보는 암호화되어 안전하게 처리됩니다.</p>
+      </aside>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="./config.js"></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1b1b18">
+  <title>결제 실패 — Street Food Fighter</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./payment.css">
+</head>
+<body class="payment-page">
+  <main class="payment-result">
+    <div class="result-mark error">!</div>
+    <p class="eyebrow">PAYMENT NOT COMPLETED</p>
+    <h1>결제를 완료하지 못했습니다</h1>
+    <p id="failMessage">결제가 취소되었거나 일시적인 오류가 발생했습니다.</p>
+    <a class="result-button" href="./index.html">다시 주문하기</a>
+  </main>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const message = params.get('message');
+    if (message) document.getElementById('failMessage').textContent = message;
+  </script>
+</body>
+</html>
